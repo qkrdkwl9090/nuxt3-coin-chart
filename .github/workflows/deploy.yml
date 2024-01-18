@@ -1,0 +1,48 @@
+name: "[deploy] github page deploy"
+env:
+  MY_EMAIL: qkrdkwl9090@naver.com
+  MY_NAME: qkrdkwl9090
+  REPO_NAME: nuxt3-coin-chart
+on:
+  workflow_dispatch:
+  push:
+    branches: [deploy]
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    strategy:
+      matrix:
+        node-version: [20.x]
+        bun-version: [1.0.11]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+      - name: Bun setup
+        uses: oven-sh/setup-bun@v1
+        with:
+          version: ${{ matrix.bun-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version  }}
+          check-latest: true
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Generate
+        run: bun generate
+      - name: Github Page Deploy
+        run: >
+          git config --global user.email ${{ env.MY_EMAIL }} 
+            git config --global user.name ${{ env.MY_NAME }} 
+            git remote set-url origin https://${{ env.MY_NAME }}:${{ secrets.RELEASE_TOKEN }}@github.com/${{ env.MY_NAME }}/${{ env.REPO_NAME }}.git
+            bun run deploy
+      - name: Semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: bun semantic-release
