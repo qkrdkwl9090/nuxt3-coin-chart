@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/nuxt3-coin-chart/",
   },
-  css: ["~/assets/styles/main.scss"],
+  css: ["@/assets/styles/font.scss", "@/assets/styles/main.scss"],
   postcss: {
     plugins: {
       tailwindcss: {},
