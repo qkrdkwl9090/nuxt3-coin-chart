@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/nuxt3-coin-chart/",
   },
+  modules: ["nuxt-lodash"],
   css: ["@/assets/styles/font.scss", "@/assets/styles/main.scss"],
   postcss: {
     plugins: {

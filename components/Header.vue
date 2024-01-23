@@ -1,5 +1,21 @@
+<script setup lang="ts">
+const currentScroll = ref(0);
+const isScrollTop = computed(() => currentScroll.value < 82);
+const scrollEvent = useThrottle(() => {
+  currentScroll.value = window.scrollY;
+}, 300);
+onMounted(() => {
+  window.addEventListener("scroll", scrollEvent);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", scrollEvent);
+});
+</script>
 <template>
-  <header class="w-screen | shrink-0 fixed z-10 | bg-white">
+  <header
+    class="w-screen | shrink-0 fixed z-10 bg-white duration-300 transition-[opacity] border-b-2"
+    :class="isScrollTop ? 'opacity-100' : 'opacity-0'"
+  >
     <section class="py-4 flex items-center justify-between px-6 xl:px-8">
       <div class="flex items-center">
         <NuxtLink
